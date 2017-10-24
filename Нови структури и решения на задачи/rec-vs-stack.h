@@ -28,8 +28,10 @@ unsigned fact_stack(unsigned n) {
     }
 }
 
+// n < 9 is better base case than n == 0
 void print_digits_rec(unsigned n) {
-    if (n == 0) {
+    if (n < 9) {
+        cout << n;
         return;
     }
     print_digits_rec(n / 10);
@@ -39,10 +41,11 @@ void print_digits_rec(unsigned n) {
 void print_digits_stack(unsigned n) {
     stack<unsigned> st;
 
-    while (n > 0) {
+    while (n > 9) {
         st.push(n % 10);
         n /= 10;
     }
+    cout << n;
     while (!st.empty()) {
         cout << " " << pop(st);
     }
