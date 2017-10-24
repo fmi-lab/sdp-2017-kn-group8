@@ -28,9 +28,9 @@ unsigned fact_stack(unsigned n) {
     }
 }
 
-// n < 9 is better base case than n == 0
+// n <= 9 is better base case than n == 0
 void print_digits_rec(unsigned n) {
-    if (n < 9) {
+    if (n <= 9) {
         cout << n;
         return;
     }
