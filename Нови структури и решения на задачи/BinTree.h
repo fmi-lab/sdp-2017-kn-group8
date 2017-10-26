@@ -1,9 +1,11 @@
 #pragma once
 #include<iostream>
 #include<stack>
+#include<vector>
 #include"util.h"
 using std::cout;
 using std::stack;
+using std::vector;
 
 struct Node {
     int data;
@@ -52,29 +54,36 @@ public:
         print_hierarchy(root, 0);
     }
 
-    // Works but causes memory leaks. When and how to delete the new nodes?
     void print_with_stack() const {
         stack<Node*> st;
         st.push(root);
-        Node* crr;
+        vector<Node*> for_delete;
 
-        while (!st.empty()) {
-            crr = pop(st);
-            if (crr == nullptr) {
-                continue;
-            }
-            else if (crr->childless()) {
-                cout << crr->data << " ";
-            }
-            else {
-                st.push(crr->right);
-                st.push(crr->left);
-                st.push(new Node(crr->data));
-            }
+        while (!st.empty()) {                 // Long functions are hard to trace and understand.
+            pop_and_update(st, for_delete);   // And when you have a complex loop body where you want to write
+        }                                     // "continue", it's probably time to extract it into separate function
+        
+        for (vector<Node*>::iterator it = for_delete.begin();  it != for_delete.end();  ++it) {
+            delete *it;
         }
     }
 
 private:
+    // Helper for print_with_stack
+    void pop_and_update(stack<Node*>& st, vector<Node*>& for_delete) const {
+        Node* crr = pop(st);
+        if (crr == nullptr) {
+            return;
+        }
+        if (crr->childless()) {
+            cout << crr->data << " ";
+            return;
+        }
+        st.push(crr->right);
+        st.push(crr->left);
+        st.push(new Node(crr->data));
+        for_delete.push_back(st.top());
+    }
 
     void add(int x, Node*& sub_root, char* path) {
         if (sub_root == nullptr) {
