@@ -1,17 +1,43 @@
+#pragma once
 #include<iostream>
 using std::cout;
 
 struct Node {
 	int data;
 	Node* next;
-	Node(int _data) : data(_data), next(NULL) {}
+	Node(int _data) : data(_data), next(nullptr) {}
 };
 
 class List {
 	Node* start;
 
 public:
-	List() : start(NULL) {}
+    class Iterator {
+        Node* crr;
+    public:
+        Iterator(Node* node) {
+            crr = node;
+        }
+        bool operator != (const Iterator& other) {
+            return crr != other.crr;
+        }
+        void operator++ () {
+            crr = crr->next;
+        }
+        int operator* () {
+            return crr->data;
+        }
+    };
+
+    Iterator begin() {
+        return Iterator(start);
+    }
+
+    Iterator end() {
+        return Iterator(nullptr);
+    }
+
+	List() : start(nullptr) {}
 
 	~List() {
 		del(start);
@@ -22,7 +48,7 @@ public:
 	}
 
 	void push_back(int x) {
-		if (start == NULL) {
+		if (start == nullptr) {
 			start = new Node(x);
 			return;
 		}
@@ -30,12 +56,12 @@ public:
 	}
 	
 	void pop_back() {
-		if (start == NULL) {
+		if (start == nullptr) {
 			return;
 		}
-		if (start->next == NULL) {
+		if (start->next == nullptr) {
 			delete[] start;
-			start = NULL;
+			start = nullptr;
 			return;
 		}
 		pop_back(start);
@@ -43,7 +69,7 @@ public:
 
 private:
 	void print(const Node* top) const {
-		if (top == NULL) {
+		if (top == nullptr) {
 			return;
 		}
 		cout << top->data << " ";
@@ -51,7 +77,7 @@ private:
 	}
 
 	void push_back(int x, Node*& top) {
-		if (top->next == NULL) {
+		if (top->next == nullptr) {
 			top->next = new Node(x);
 			return;
 		}
@@ -59,16 +85,16 @@ private:
 	}
 	
 	void pop_back(Node*& top) {
-		if (top->next->next == NULL) {
+		if (top->next->next == nullptr) {
 			delete[] top->next;
-			top->next = NULL;
+			top->next = nullptr;
 			return;
 		}
 		pop_back(top->next);
 	}
 	
 	void del(Node*& top) {
-		if (top == NULL) {
+		if (top == nullptr) {
 			return;
 		}
 		cout << "Deleting " << top->data << '\n';    // For test purposes - do NOT leave
@@ -108,9 +134,4 @@ void test_the_list() {
 	// Deleting 3
 	// Deleting 5
 	// Deleting 7
-}
-
-int main() {
-	test_the_list();
-	return 0;
 }
