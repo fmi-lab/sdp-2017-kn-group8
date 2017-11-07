@@ -2,7 +2,7 @@
 
 Стандартната библиотека на С++: http://www.cplusplus.com/reference
 
-Теорията, писана от мен: https://github.com/Scorpion333/fmi-textbook
+"Учебникът на Пепи": https://github.com/Scorpion333/fmi-textbook
 
 ## Нови неща в Учебника:
 
