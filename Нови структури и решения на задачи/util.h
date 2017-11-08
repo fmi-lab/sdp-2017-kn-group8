@@ -13,9 +13,9 @@ void print_spaces(unsigned n) {
     }
 }
 
-template<typename t>
-t pop(stack<t>& s) {
-    t top = s.top();
+template<typename T>
+T pop(stack<T>& s) {
+    T top = s.top();
     s.pop();
     return top;
 }
