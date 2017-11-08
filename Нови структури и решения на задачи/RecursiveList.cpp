@@ -18,22 +18,25 @@ public:
         Iterator(Node* node) {
             crr = node;
         }
-        bool operator != (const Iterator& other) {
+        bool operator != (const Iterator& other) const {
             return crr != other.crr;
         }
         void operator++ () {
             crr = crr->next;
         }
-        int operator* () {
+        int operator * () const  {
+            return crr->data;
+        }
+        int& operator * () {
             return crr->data;
         }
     };
 
-    Iterator begin() {
+    Iterator begin() const {
         return Iterator(start);
     }
 
-    Iterator end() {
+    Iterator end() const {
         return Iterator(nullptr);
     }
 
