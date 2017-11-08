@@ -2,10 +2,12 @@
 #include<iostream>
 #include<stack>
 #include<vector>
+#include<string>
 #include"util.h"
 using std::cout;
 using std::stack;
 using std::vector;
+using std::string;
 
 struct Node {
     int data;
@@ -19,14 +21,59 @@ struct Node {
     }
 };
 
+
 class BinTree {
     Node* root;
 
 public:
+    // Iterates root-left-right
+    class Iterator {
+        Node* crr;
+        stack<Node*> waiting_subtrees;          // At any time the stack contains the subtrees of
+                                                // all the not-visited elements
+        void push_if_needed() {
+            if (crr != nullptr) {
+                if (crr->right != nullptr) waiting_subtrees.push(crr->right);
+                if (crr->left  != nullptr) waiting_subtrees.push(crr->left);
+            }
+        }
+    public:
+        Iterator(Node* node) : crr(node) {      // In the beginning the iterator points to the root
+            push_if_needed();                   // All the other elements - both the left and right subtree - are waiting
+        }
+        bool operator != (const Iterator& other) const {
+            return crr != other.crr;
+        }
+        int operator * () const  {
+            return crr->data;
+        }
+        int& operator * () {
+            return crr->data;
+        }
+
+        void operator ++ () {
+            if (waiting_subtrees.empty()) {     // No waiting elements <=> every node has been visited
+                crr = nullptr;                  // So we send crr to the 'end'...
+            }
+            else {
+                crr = pop(waiting_subtrees);    // ...or the first (actually, the leftest) waiting subtree...
+            }
+            push_if_needed();                   // ...without forgetting the elements below the new subroot!
+        }
+    };
+
+    Iterator begin() const {
+        return Iterator(root);
+    }
+    Iterator end() const {
+        return Iterator(nullptr);
+    }
+
+
     BinTree() : root(nullptr) {}
 
     ~BinTree() {
-        del(root);
+       del(root);
     }
 
     void add(int x, char* path) {
@@ -62,13 +109,35 @@ public:
         while (!st.empty()) {                 // Long functions are hard to trace and understand.
             pop_and_update(st, for_delete);   // And when you have a complex loop body where you want to write
         }                                     // "continue", it's probably time to extract it into separate function
-        
-        for (vector<Node*>::iterator it = for_delete.begin();  it != for_delete.end();  ++it) {
+
+        for (vector<Node*>::iterator it = for_delete.begin(); it != for_delete.end(); ++it) {
             delete *it;
         }
     }
 
+    string path_to_element(int x) const {
+        return path_to_element(x, root);
+    }
 private:
+    // Returns "NOT" if x is not in the tree
+    string path_to_element(int x, Node* sub_root) const {
+        if (sub_root == nullptr) {
+            return "NOT";
+        }
+        if (x == sub_root->data) {
+            return "";
+        }
+        string left_path = path_to_element(x, sub_root->left);
+        if (left_path != "NOT") {
+            return "L" + left_path;
+        }
+        string right_path = path_to_element(x, sub_root->right);
+        if (right_path != "NOT") {
+            return "R" + right_path;
+        }
+        return "NOT";
+    }
+
     // Helper for print_with_stack
     void pop_and_update(stack<Node*>& st, vector<Node*>& for_delete) const {
         Node* crr = pop(st);
