@@ -34,8 +34,7 @@ public:
 
     // 'push' helper
     bool no_space() const {
-        return last == first - 1
-            || (last == buffer_end() && first == arr);
+        return last == first - 1  ||  (last == buffer_end() && first == arr);
     }
 
     // Prettier solution than the one we wrote in class
