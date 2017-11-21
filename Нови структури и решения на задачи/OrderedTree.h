@@ -1,6 +1,3 @@
-// WARNING: Not tested code.
-// Probably contains small mistakes.
-
 #pragma once
 #include<iostream>
 #include"util.h"
@@ -42,9 +39,8 @@ public:
     void add(const T& x) {
         add_to_subtree(x, root);
     }
-
     void remove(const T& x) {
-        remove(x, root);
+        remove_from_subtree(x, root);
     }
 
 private:
@@ -54,10 +50,13 @@ private:
             return;
         }
         if (x < sub_root->data) {
-            add_to_subtree(sub_root->left);
+            add_to_subtree(x, sub_root->left);
             return;
         }
-        add_to_subtree(sub_root->right);
+        add_to_subtree(x, sub_root->right);
+        // if (height(sub_root->right) - height(sub_root->left) == 2) {
+        //     rotate_left(sub_root);
+        // }
     }
     
     void remove_from_subtree(const T& x, Node<T>*& sub_root) {
@@ -117,13 +116,43 @@ private:
     }
 
 
-    // We'll see how exactly to use rotations later
+    // We'll see how exactly to use rotations soon
     void rotate_left(Node<T>*& sub_root) {
-        Node<T>* temp = sub_root->right;
-        sub_root->right = temp->left;
-        temp->left = sub_root;
-        sub_root = temp;
+        if (height(sub_root->right->left) > height(sub_root->right->right)) {
+            rotate_left_double(sub_root);
+            return;
+        }
+        rotate_left_simple(sub_root);
     }
+    void rotate_left_simple(Node<T>*& sub_root) {
+        cout << "Simple left rotation under " << sub_root->data << '\n';
+        
+        Node<T>* new_root = sub_root->right;    // We choose the new root of the subtree
+        Node<T>* new_left = sub_root;           // and the new root of its left subtree.
+
+        new_left->right = new_root->left;       // We adjust the new left (sub)subtree.
+        new_root->left = new_left;              // We put the adjusted left tree in its place.
+                                                // new_root->right points where it must, so we don't change it.
+
+        sub_root = new_root;              // We put the big subtree in its place (we want sub_root's parent to point to new_root).
+                                          // The '&' above is very important!
+    }
+    void rotate_left_double(Node<T>*& sub_root) {
+        cout << "Double left rotation under " << sub_root->data << '\n';
+        
+        Node<T>* new_root = sub_root->right->left;      // We choose the new roots - of the whole subtree,
+        Node<T>* new_left = sub_root;                   // its left subtree
+        Node<T>* new_right = sub_root->right;           // and its right subtree.
+        
+        new_left->right = new_root->left;       // We adjust the new left (sub)subtree
+        new_right->left = new_root->right;      // and the new right (sub)subtree.
+        
+        new_root->left = new_left;              // We put the new (sub)subtrees in their place.
+        new_root->right = new_right;
+        
+        sub_root = new_root;                    // We put the big subtree in its place.
+    }
+
 
     void del(Node<T>*& sub_root) {
         if (sub_root == nullptr) {
