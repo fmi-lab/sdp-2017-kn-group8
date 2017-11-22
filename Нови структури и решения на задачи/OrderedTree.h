@@ -1,7 +1,9 @@
 #pragma once
 #include<iostream>
+#include<vector>        // For the constructor
 #include"util.h"
 using std::cout;
+using std::vector;
 
 template<typename T>
 struct Node {
@@ -27,6 +29,12 @@ public:
     OrderedTree() : root(nullptr) {}
     ~OrderedTree() {
         del(root);
+    }
+    
+    // This way we can write: OrderedTree<int> ot = { 10, 5, 100};
+    OrderedTree(const vector<T>& v) : root(nullptr) {
+        for (unsigned i = 0; i < v.size(); i++)
+            add(v[i]);
     }
     
     void print_ordered() const {
