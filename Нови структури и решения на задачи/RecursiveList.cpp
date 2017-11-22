@@ -2,20 +2,22 @@
 #include<iostream>
 using std::cout;
 
+template<typename T>
 struct Node {
-	int data;
+	T data;
 	Node* next;
-	Node(int _data) : data(_data), next(nullptr) {}
+	Node(const T& _data) : data(_data), next(nullptr) {}
 };
 
+template<typename T>
 class List {
-	Node* start;
+	Node<T>* start;
 
 public:
     class Iterator {
-        Node* crr;
+        Node<T>* crr;
     public:
-        Iterator(Node* node) {
+        Iterator(Node<T>* node) {
             crr = node;
         }
         bool operator != (const Iterator& other) const {
@@ -24,10 +26,10 @@ public:
         void operator++ () {
             crr = crr->next;
         }
-        int operator * () const  {
+        T& operator* () {
             return crr->data;
         }
-        int& operator * () {
+        T operator*() const {
             return crr->data;
         }
     };
@@ -50,9 +52,9 @@ public:
 		print(start);
 	}
 
-	void push_back(int x) {
+	void push_back(T x) {
 		if (start == nullptr) {
-			start = new Node(x);
+			start = new Node<T>(x);
 			return;
 		}
 		push_back(x, start);
@@ -71,7 +73,7 @@ public:
 	}
 
 private:
-	void print(const Node* top) const {
+	void print(const Node<T>* top) const {
 		if (top == nullptr) {
 			return;
 		}
@@ -79,15 +81,15 @@ private:
 		print(top->next);
 	}
 
-	void push_back(int x, Node*& top) {
+	void push_back(int x, Node<T>*& top) {
 		if (top->next == nullptr) {
-			top->next = new Node(x);
+			top->next = new Node<T>(x);
 			return;
 		}
 		push_back(x, top->next);
 	}
 	
-	void pop_back(Node*& top) {
+	void pop_back(Node<T>*& top) {
 		if (top->next->next == nullptr) {
 			delete[] top->next;
 			top->next = nullptr;
@@ -96,45 +98,14 @@ private:
 		pop_back(top->next);
 	}
 	
-	void del(Node*& top) {
+	void del(Node<T>*& top) {
 		if (top == nullptr) {
 			return;
 		}
 		cout << "Deleting " << top->data << '\n';    // For test purposes - do NOT leave
 		                                             // such lines in official solutions
-		Node* temp = top->next;
-		delete[] top;
+		Node<T>* temp = top->next;
+		delete top;
 		del(temp);
 	}
 };
-
-// VERY important - they may not be the best tests, but there have to be tests
-void test_the_list() {
-	List lis;
-	lis.push_back(2);
-	lis.push_back(4);
-	lis.push_back(6);
-	lis.push_back(8);
-
-	lis.pop_back();
-	lis.print();
-	cout << '\n';		// Expected output: 2 4 6
-
-	lis.pop_back();
-	lis.pop_back();
-	lis.print();
-	cout << '\n';		// Expected output: 2
-
-	lis.pop_back();
-	lis.print();
-	cout << '\n';		// Expected output: (only the new line)
-
-	lis.push_back(3);
-	lis.push_back(5);
-	lis.push_back(7);
-	
-	// Expected output at the end:
-	// Deleting 3
-	// Deleting 5
-	// Deleting 7
-}
