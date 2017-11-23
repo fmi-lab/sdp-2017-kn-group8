@@ -31,12 +31,11 @@ public:
         del(root);
     }
     
-    // This way we can write: OrderedTree<int> ot = { 10, 5, 100};
     OrderedTree(const vector<T>& v) : root(nullptr) {
         for (unsigned i = 0; i < v.size(); i++)
             add(v[i]);
     }
-    
+
     void print_ordered() const {
         print_ordered(root);
     }
@@ -59,12 +58,15 @@ private:
         }
         if (x < sub_root->data) {
             add_to_subtree(x, sub_root->left);
+            if (height(sub_root->left) - height(sub_root->right) == 2) {    // If the tree becomes unbalanced, we'll...
+                rotate_right(sub_root);                                     // make the tree balanced again!
+            }                                                               
             return;
         }
         add_to_subtree(x, sub_root->right);
-        // if (height(sub_root->right) - height(sub_root->left) == 2) {
-        //     rotate_left(sub_root);
-        // }
+        if (height(sub_root->right) - height(sub_root->left) == 2) {        // Using the 'height' function makes add_to_subtree VERY slow
+            rotate_left(sub_root);                                          // because the height is calculated every time height() is called.
+        }                                                                   // This can be fixed with balance factors.
     }
     
     void remove_from_subtree(const T& x, Node<T>*& sub_root) {
@@ -123,14 +125,16 @@ private:
         iter->right = nullptr;
     }
 
-
-    // We'll see how exactly to use rotations soon
+    // Make tree balanced again!
     void rotate_left(Node<T>*& sub_root) {
         if (height(sub_root->right->left) > height(sub_root->right->right)) {
             rotate_left_double(sub_root);
             return;
         }
         rotate_left_simple(sub_root);
+    }
+    void rotate_right(Node<T>*& sub_root) {
+        // Analogous to left rotations
     }
     void rotate_left_simple(Node<T>*& sub_root) {
         cout << "Simple left rotation under " << sub_root->data << '\n';
@@ -160,7 +164,6 @@ private:
         
         sub_root = new_root;                    // We put the big subtree in its place.
     }
-
 
     void del(Node<T>*& sub_root) {
         if (sub_root == nullptr) {
