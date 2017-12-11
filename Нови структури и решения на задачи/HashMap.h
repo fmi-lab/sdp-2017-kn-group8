@@ -79,7 +79,7 @@ void test_hash() {
     vector<string> names = { "Pesho", "Gosho", "Gosho", "Gosho", "Elena",
                              "Pesho", "Maria", "Maria", "Anita" };
 
-    HashMap<string, unsigned> counts([](const string& str) { return unsigned(str[0]); }, 0, 50);
+    HashMap<string, unsigned> counts( [](const string& str) { return unsigned(str[0]); },  0,  50 );
 
     for (unsigned i = 0; i < names.size(); i++) {
         counts[names[i]]++;
