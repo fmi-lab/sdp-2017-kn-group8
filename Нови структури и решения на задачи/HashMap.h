@@ -23,6 +23,10 @@ class HashMap {
         bool operator == (const Pair& other) const {
             return key == other.key;
         }
+        // Trivial but useful
+        void print() const {
+            cout << key << ": " << value << '\n';
+        }
     };
 
     vector<vector<Pair>> table;
@@ -97,7 +101,7 @@ public:
                 KeyT key = table[i][j].key;
 
                 if (other.has_key(key)) {
-                    result[key] = pair<ValueT, OtherVT>((*this)[key], other[key]);      // (*this)[key] != *this[key]   !!!
+                    result[key] = { (*this)[key], other[key] };      // (*this)[key] != *this[key]   !!!
                 }
             }
         }
@@ -137,7 +141,7 @@ template<typename KeyT, typename ValueT>
 ostream& operator << (ostream& out, const HashMap<KeyT, ValueT>& hm) {
     for (unsigned i = 0; i < hm.table.size(); i++) {
         for (unsigned j = 0; j < hm.table[i].size(); j++) {
-            out << hm.table[i][j].key << ": " << hm.table[i][j].value << '\n';
+            hm.table[i][j].print();
         }
     }
     return out;
