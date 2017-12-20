@@ -136,9 +136,7 @@ private:
     void rotate_right(Node<T>*& sub_root) {
         // Analogous to left rotations
     }
-    void rotate_left_simple(Node<T>*& sub_root) {
-        cout << "Simple left rotation under " << sub_root->data << '\n';
-        
+    void rotate_left_simple(Node<T>*& sub_root) {        
         Node<T>* new_root = sub_root->right;    // We choose the new root of the subtree
         Node<T>* new_left = sub_root;           // and the new root of its left subtree.
 
@@ -150,8 +148,6 @@ private:
                                           // The '&' above is very important!
     }
     void rotate_left_double(Node<T>*& sub_root) {
-        cout << "Double left rotation under " << sub_root->data << '\n';
-        
         Node<T>* new_root = sub_root->right->left;      // We choose the new roots - of the whole subtree,
         Node<T>* new_left = sub_root;                   // its left subtree
         Node<T>* new_right = sub_root->right;           // and its right subtree.
