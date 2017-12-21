@@ -1,11 +1,12 @@
 #pragma once
-// The file containes some short but useful functions
-
 #include<iostream>
 #include<stack>
-#include<cassert>
 using std::cout;
 using std::stack;
+
+void expect(const char* output) {                   // Useful for short tests
+    cout << "\nExpected:\n" << output << "\n\n";
+}
 
 void print_spaces(unsigned n) {
     for (unsigned i = 0; i < n; ++i) {
