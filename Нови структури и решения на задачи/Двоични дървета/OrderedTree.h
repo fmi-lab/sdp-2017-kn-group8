@@ -65,9 +65,9 @@ private:
         }
         if (x > sub_root->data) {
             add_to_subtree(x, sub_root->right);
-            if (height(sub_root->right) - height(sub_root->left) == 2) {        // Using the 'height' function makes add_to_subtree VERY slow
-                rotate_left(sub_root);                                          // because the height is calculated every time height() is called.
-            }                                                                   // This can be fixed with balance factors.
+            if (height(sub_root->right) - height(sub_root->left) == 2) {    // Using the 'height' function makes add_to_subtree VERY slow
+                rotate_left(sub_root);                                      // because the height is calculated every time height() is called.
+            }                                                               // This can be fixed with balance factors.
         }
     }
     

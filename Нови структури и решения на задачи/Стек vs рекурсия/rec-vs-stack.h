@@ -85,6 +85,17 @@ void print_k_stack(unsigned size) {
     }
 }
 
+// For the calculator:
+int apply(char operation, int x, int y) {
+    switch (operation) {
+    case '+': return x + y;
+    case '-': return x - y;
+    case '*': return x * y;
+    case '/': return x / y;
+    default: break;
+    }
+}
+
 // Calculates simple computations like: ((3+((5-1)*9))-(2+6))
 int calculate(char* str) {
     stack<char> st;

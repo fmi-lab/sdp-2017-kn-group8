@@ -19,13 +19,3 @@ T pop(stack<T>& s) {
     s.pop();
     return top;
 }
-
-int apply(char operation, int x, int y) {
-    switch (operation) {
-    case '+': return x + y;
-    case '-': return x - y;
-    case '*': return x * y;
-    case '/': return x / y;
-    default: assert(false);     // Giving incorrect "operation" is no good idea 
-    }
-}
