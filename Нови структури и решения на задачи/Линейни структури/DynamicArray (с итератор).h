@@ -14,12 +14,12 @@ using reduce_fn = R(*)(const R&, const E&);
 template<typename T>
 class DynamicArray {
 private:
-	T* arr;
-	unsigned size;
-	unsigned capacity;
+    T* arr;
+    unsigned size;
+    unsigned capacity;
 
-	void resize();
-	void copy(const DynamicArray<T>& other);
+    void resize();
+    void copy(const DynamicArray<T>& other);
 public:
     // At FMI, we wrote it more complex. The idea below is simpler, but still working.
     class Iterator {
@@ -48,134 +48,134 @@ public:
     Iterator begin() const {
         return Iterator(arr);
     }
-    
+
     Iterator end() const {
         return Iterator(arr + size);
     }
 
-	DynamicArray();
-	DynamicArray(const DynamicArray<T>& other);
-	DynamicArray<T>& operator = (const DynamicArray<T>& other);
-	~DynamicArray();
-	
-	void push_back(const T& new_element);
-	
-	T& operator [] (unsigned i);
-	T operator[](unsigned i) const;
+    DynamicArray();
+    DynamicArray(const DynamicArray<T>& other);
+    DynamicArray<T>& operator = (const DynamicArray<T>& other);
+    ~DynamicArray();
 
-	unsigned get_size() const;
+    void push_back(const T& new_element);
 
-	void remove_by_index(unsigned index);
+    T& operator [] (unsigned i);
+    T operator[](unsigned i) const;
 
-	void map(map_fn<T> func);
+    unsigned get_size() const;
 
-	void filter(predicate<T> pred);
+    void remove_by_index(unsigned index);
 
-	template<typename ResultType>
-	ResultType reduce(const ResultType& start_value, reduce_fn<ResultType, T> func);
+    void map(map_fn<T> func);
+
+    void filter(predicate<T> pred);
+
+    template<typename ResultType>
+    ResultType reduce(const ResultType& start_value, reduce_fn<ResultType, T> func);
 };
 
 template<typename T>
 void DynamicArray<T>::resize() {
-	capacity *= 2;
-	T* temp = new T[capacity];
-	for (unsigned i = 0; i < size; i++) {
-		temp[i] = arr[i];
-	}
-	delete[] arr;
-	arr = temp;
+    capacity *= 2;
+    T* temp = new T[capacity];
+    for (unsigned i = 0; i < size; i++) {
+        temp[i] = arr[i];
+    }
+    delete[] arr;
+    arr = temp;
 }
 
 template<typename T>
 void DynamicArray<T>::copy(const DynamicArray<T>& other) {
-	size = other.size;
-	capacity = other.capacity;
-	arr = new T[capacity];
-	for (unsigned i = 0; i < size; i++) {
-		arr[i] = other.arr[i];
-	}
+    size = other.size;
+    capacity = other.capacity;
+    arr = new T[capacity];
+    for (unsigned i = 0; i < size; i++) {
+        arr[i] = other.arr[i];
+    }
 }
 
 template<typename T>
 DynamicArray<T>::DynamicArray() {
-	size = 0;
-	capacity = MIN_CAPACITY;
-	arr = new T[capacity];
+    size = 0;
+    capacity = MIN_CAPACITY;
+    arr = new T[capacity];
 }
 
 template<typename T>
 DynamicArray<T>::DynamicArray(const DynamicArray<T>& other) {
-	copy(other);
+    copy(other);
 }
 
 template<typename T>
 DynamicArray<T>& DynamicArray<T>::operator = (const DynamicArray<T>& other) {
-	if (this != &other) {
-		delete[] arr;
-		copy(other);
-	}
-	return *this;
+    if (this != &other) {
+        delete[] arr;
+        copy(other);
+    }
+    return *this;
 }
 
 template<typename T>
 DynamicArray<T>::~DynamicArray() {
-	delete[] arr;
+    delete[] arr;
 }
 
 template<typename T>
 void DynamicArray<T>::push_back(const T& new_element) {
-	if (size == capacity) {
-		resize();
-	}
-	arr[size] = new_element;
-	size++;
+    if (size == capacity) {
+        resize();
+    }
+    arr[size] = new_element;
+    size++;
 }
 
 template<typename T>
 T& DynamicArray<T>::operator [] (unsigned i) {
-	return arr[i];
+    return arr[i];
 }
-	
+
 template<typename T>
 T DynamicArray<T>::operator[](unsigned i) const {
-	return arr[i];
+    return arr[i];
 }
 
 template<typename T>
 unsigned DynamicArray<T>::get_size() const {
-	return size;
+    return size;
 }
 
 template<typename T>
 void DynamicArray<T>::remove_by_index(unsigned index) {
-	for (unsigned i = index; i <= size - 2; i++) {
-		arr[i] = arr[i + 1];
-	}
-	size--;
+    for (unsigned i = index; i <= size - 2; i++) {
+        arr[i] = arr[i + 1];
+    }
+    size--;
 }
 
 template<typename T>
 void DynamicArray<T>::map(map_fn<T> func) {
-	for (unsigned i = 0; i < size; i++) {
-		func(arr[i]);
-	}
+    for (unsigned i = 0; i < size; i++) {
+        func(arr[i]);
+    }
 }
 
 template<typename T>
 void DynamicArray<T>::filter(predicate<T> pred) {
-	for (unsigned i = 0; i < size; i++) {
-		if (!pred(arr[i])) {
-			remove_by_index(i);
-		}
-	}
+    for (unsigned i = 0; i < size; i++) {
+        if (!pred(arr[i])) {
+            remove_by_index(i);
+        }
+    }
 }
 
 template<typename T>
 template<typename ResultType>
 ResultType DynamicArray<T>::reduce(const ResultType& start_value, reduce_fn<ResultType, T> func) {
-	ResultType accumulated = start_value;
-	for (unsigned i = 0; i < size; i++) {
-		accumulated = func(accumulated, arr[i]);
-	}
-	return accumulated;
+    ResultType accumulated = start_value;
+    for (unsigned i = 0; i < size; i++) {
+        accumulated = func(accumulated, arr[i]);
+    }
+    return accumulated;
 }
