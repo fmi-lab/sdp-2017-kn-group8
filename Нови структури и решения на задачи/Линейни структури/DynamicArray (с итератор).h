@@ -21,13 +21,12 @@ private:
 	void resize();
 	void copy(const DynamicArray<T>& other);
 public:
+    // At FMI, we wrote it more complex. The idea below is simpler, but still working.
     class Iterator {
         T* crr;
-        T* end_of_array;
     public:
-        Iterator(T* pointer, T* _end_of_array = nullptr) {
+        Iterator(T* pointer) {
             crr = pointer;
-            end_of_array = _end_of_array;
         }
         bool operator == (Iterator other) const {
             return crr == other.crr;
@@ -36,7 +35,7 @@ public:
             return crr != other.crr;
         }
         void operator++ () {
-            crr == end_of_array ? crr = nullptr : crr++;    // 1 line < 4 lines
+            crr++;
         }
         T operator * () const {
             return *crr;
@@ -47,11 +46,11 @@ public:
     };
 
     Iterator begin() const {
-        return Iterator(arr, arr + size - 1);
+        return Iterator(arr);
     }
     
     Iterator end() const {
-        return Iterator(nullptr);
+        return Iterator(arr + size);
     }
 
 	DynamicArray();
