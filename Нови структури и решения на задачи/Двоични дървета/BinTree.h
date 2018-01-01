@@ -76,8 +76,8 @@ public:
        del(root);
     }
 
-    void add(int x, char* path) {
-        add(x, root, path);
+    void add(int x, const char* path) {     // "LRL" is treated like const char*,
+        add(x, root, path);                 // not all compilers will accept char* as type here.
     }
 
     unsigned count_elements() const {
@@ -154,8 +154,8 @@ private:
         for_delete.push_back(st.top());
     }
 
-    void add(int x, Node*& sub_root, char* path) {
-        if (sub_root == nullptr) {
+    void add(int x, Node*& sub_root, const char* path) {    // "LRL" is treated like const char*,
+        if (sub_root == nullptr) {                          // not all compilers will accept char* as type here.
             sub_root = new Node(x);
             return;
         }
