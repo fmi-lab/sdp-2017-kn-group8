@@ -6,14 +6,14 @@ using std::vector;
 
 template<typename T>
 struct Node {
-	T data;
-	Node<T>* next;
-	Node(const T& _data) : data(_data), next(nullptr) {}
+    T data;
+    Node<T>* next;
+    Node(const T& _data) : data(_data), next(nullptr) {}
 };
 
 template<typename T>
 class List {
-	Node<T>* start;
+    Node<T>* start;
 
 public:
     class Iterator {
@@ -43,7 +43,7 @@ public:
         return Iterator(nullptr);
     }
 
-	List() : start(nullptr) {}
+    List() : start(nullptr) {}
     ~List() {
         del(start);
     }
@@ -53,7 +53,7 @@ public:
         for (unsigned i = 0; i < v.size(); i++)
             push_back(v[i]);
     }
-    
+
     // Copy constructor and operator =, similar to DLList's 
     List(const List& other) : start(nullptr) {
         Node<T>* node_in_other = other.start;
@@ -63,7 +63,7 @@ public:
         }
     }
     List& operator = (const List<T>& other) {
-        if(this != &other) {
+        if (this != &other) {
             del(start);
             start = nullptr;
             Node<T>* node_in_other = other.first;
@@ -76,42 +76,42 @@ public:
     }
 
     void print() const {
-		print(start);
-	}
+        print(start);
+    }
 
-	void push_back(const T& x) {
-		if (start == nullptr) {
-			start = new Node<T>(x);
-			return;
-		}
-		push_back(x, start);
-	}
-	
-	void pop_back() {
-		if (start == nullptr) {
-			return;
-		}
-		if (start->next == nullptr) {
-			delete[] start;
-			start = nullptr;
-			return;
-		}
-		pop_back(start);
-	}
+    void push_back(const T& x) {
+        if (start == nullptr) {
+            start = new Node<T>(x);
+            return;
+        }
+        push_back(x, start);
+    }
+
+    void pop_back() {
+        if (start == nullptr) {
+            return;
+        }
+        if (start->next == nullptr) {
+            delete[] start;
+            start = nullptr;
+            return;
+        }
+        pop_back(start);
+    }
 
     void remove(const T& x) {
         // ...
     }
 
     template <typename R>                   // R - Result type
-    List<R> map(R (*f)(const T&)) const {
+    List<R> map(R(*f)(const T&)) const {
         List<R> result;
         for (Iterator it = begin(); it != end(); ++it) {
             result.push_back(f(*it));
         }
         return result;
     }
-    
+
     void map_change(T(*f)(const T&)) {
         for (Iterator it = begin(); it != end(); ++it) {
             *it = f(*it);
@@ -138,7 +138,7 @@ public:
     }
 
     template <typename R>
-    R reduce(void (*f)(R&, const T&), const R& init) const {
+    R reduce(void(*f)(R&, const T&), const R& init) const {
         R result = init;
         for (Iterator it = begin(); it != end(); ++it) {
             f(result, *it);
@@ -147,39 +147,39 @@ public:
     }
 
 private:
-	void print(const Node<T>* top) const {
-		if (top == nullptr) {
-			return;
-		}
-		cout << top->data << " ";
-		print(top->next);
-	}
+    void print(const Node<T>* top) const {
+        if (top == nullptr) {
+            return;
+        }
+        cout << top->data << " ";
+        print(top->next);
+    }
 
-	void push_back(const T& x, Node<T>*& top) {
-		if (top->next == nullptr) {
-			top->next = new Node<T>(x);
-			return;
-		}
-		push_back(x, top->next);
-	}
-	
-	void pop_back(Node<T>*& top) {
-		if (top->next->next == nullptr) {
-			delete[] top->next;
-			top->next = nullptr;
-			return;
-		}
-		pop_back(top->next);
-	}
-	
-	void del(Node<T>*& top) {
-		if (top == nullptr) {
-			return;
-		}
-	    // cout << "Deleting " << top->data << '\n';    // For test purposes - do NOT leave
-		//                                              // such lines in official solutions
-		Node<T>* temp = top->next;
-		delete top;
-		del(temp);
-	}
+    void push_back(const T& x, Node<T>*& top) {
+        if (top->next == nullptr) {
+            top->next = new Node<T>(x);
+            return;
+        }
+        push_back(x, top->next);
+    }
+
+    void pop_back(Node<T>*& top) {
+        if (top->next->next == nullptr) {
+            delete[] top->next;
+            top->next = nullptr;
+            return;
+        }
+        pop_back(top->next);
+    }
+
+    void del(Node<T>*& top) {
+        if (top == nullptr) {
+            return;
+        }
+        // cout << "Deleting " << top->data << '\n';    // For test purposes - do NOT leave
+        //                                              // such lines in official solutions
+        Node<T>* temp = top->next;
+        delete top;
+        del(temp);
+    }
 };
