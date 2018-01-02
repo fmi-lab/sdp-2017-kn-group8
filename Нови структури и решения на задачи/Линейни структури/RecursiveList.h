@@ -176,8 +176,8 @@ private:
 		if (top == nullptr) {
 			return;
 		}
-	    cout << "Deleting " << top->data << '\n';    // For test purposes - do NOT leave
-		                                             // such lines in official solutions
+	    // cout << "Deleting " << top->data << '\n';    // For test purposes - do NOT leave
+		//                                              // such lines in official solutions
 		Node<T>* temp = top->next;
 		delete top;
 		del(temp);
