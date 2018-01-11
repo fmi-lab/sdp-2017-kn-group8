@@ -112,13 +112,13 @@ void test_graph() {
         "M.Tarnovo ->\n"                    // everything into a single char*.
     );
 
-    for (string city : { "Sofia", "Plovdiv", "Varna", "Burgas", "M.Tarnovo", "Kiustendil" }) {
-        cout << g.has_vertex(city);
-    }
-    expect("110110");
+    for (string city : { "Sofia", "Plovdiv", "Varna", "Burgas", "M.Tarnovo", "Kiustendil" }) {      // Try to understand
+        cout << g.has_vertex(city);                                                                 // what I do here
+    }                                                                                               // without knowing
+    expect("110110");                                                                               // the syntax. :)
 
     cout << g.has_edge("Burgas", "M.Tarnovo")
-        << g.has_edge("Plovdiv", "Burgas")
-        << g.has_edge("Sofia", "Kiustendil");
+         << g.has_edge("Plovdiv", "Burgas")
+         << g.has_edge("Sofia", "Kiustendil");
     expect("100");
 };
