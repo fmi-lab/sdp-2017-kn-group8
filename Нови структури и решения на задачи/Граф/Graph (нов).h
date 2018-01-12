@@ -54,7 +54,7 @@ public:
     }
 
     bool has_edge(const T& a, const T& b) const {
-        return has_vertex(a) && has_vertex(b) && set_of(a).count(ids[b]) == 1;      // set_of(a).count(ids[b]) == 1; <=>
+        return has_vertex(a) && has_vertex(b) && set_of(a).count(ids[b]) == 1;      // set_of(a).count(ids[b]) == 1 <=>
     }                                                                               // sef_of(a) has element ids[b]
 
     void print_vertexes() {
@@ -86,7 +86,7 @@ private:
     }
 };
 
-// I changed the test a little so that it test every method
+// I changed the test a little so that it tests every method
 void test_graph() {
     Graph<string> g({ "Sofia", "Varna", "Plovdiv" });
 
@@ -95,12 +95,15 @@ void test_graph() {
 
     g.add_edge("Sofia", "Sofia");
     g.add_edge("Sofia", "Varna");
+    
     g.remove_vertex("Varna");
-    g.add_edge("Burgas", "M.Tarnovo");
-
-    g.add_edge("Sofia", "Burgas");
+    
+    g.add_edge("Burgas",  "M.Tarnovo");
+    g.add_edge("Sofia",   "Burgas");
     g.add_edge("Plovdiv", "Burgas");
+    
     g.remove_edge("Plovdiv", "Burgas");
+    
     g.print_vertexes();
     expect("Sofia Plovdiv Burgas M.Tarnovo");
 
