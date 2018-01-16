@@ -20,3 +20,10 @@ T pop(stack<T>& s) {
     s.pop();
     return top;
 }
+
+// Useful function.
+// Appending a symbol to char* is a little... annoying.
+void push_back(char* str, char sym) {
+    char helper[2] = { sym, '\0' };
+    strcat(str, helper);
+}
