@@ -79,10 +79,10 @@ public:
 
 private:
     set<unsigned>& set_of(const T& v) {
-        return sets[index_of(v, vertexes)];
+        return sets[ids[v]];
     }
     set<unsigned> set_of(const T& v) const {
-        return sets[index_of(v, vertexes)];
+        return sets[ids[v]];
     }
 };
 
