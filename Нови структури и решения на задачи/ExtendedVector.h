@@ -1,17 +1,8 @@
 #pragma once
-// The standard vector + some useful functions for it
-
 #include<iostream>
 #include<vector>
-using std::vector;
 using std::cout;
-
-template<typename T>
-void print_vector(const vector<T>& vec) {
-    for (unsigned i = 0; i < vec.size(); i++)
-        cout << vec[i] << ' ';
-    cout << '\n';
-}
+using std::vector;
 
 template<typename T>
 int index_of(const T& x, const vector<T>& vec) {
@@ -20,6 +11,11 @@ int index_of(const T& x, const vector<T>& vec) {
             return i;
     }
     return -1;
+}
+
+template<typename T>
+bool has_element(const T& x, const vector<T>& vec) {
+    return index_of(x, vec) != -1;
 }
 
 template<typename T>
@@ -34,4 +30,10 @@ template<typename T>
 void push_if_needed(const T& x, vector<T>& vec) {
     if (index_of(x, vec) == -1)
         vec.push_back(x);
+}
+
+template<typename T>
+void print_vector(const vector<T>& vec) {
+    for (unsigned i = 0; i < vec.size(); i++)
+        cout << vec[i] << ' ';
 }

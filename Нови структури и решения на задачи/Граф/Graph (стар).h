@@ -1,7 +1,11 @@
 #pragma once
 #include<iostream>
-#include"ExtendedVector.h"      // <vector> is included in this header
+#include<queue>
+#include<set>
+#include"ExtendedVector.h"
 using std::cout;
+using std::queue;
+using std::set;
 
 template<typename T>
 class Graph {
@@ -13,7 +17,7 @@ public:
         : vertexes(vec),
         lists(vec.size(), vector<T>()) {}
 
-    int index_of_vertex(const T& v) {
+    int index_of_vertex(const T& v) const {
         return index_of(v, vertexes);
     }
 
@@ -84,32 +88,106 @@ public:
             }
         }
     }
+
+    bool has_vertex(const T& v) const {
+        return index_of_vertex(v) != -1;
+    }
+    bool has_edge(const T& a, const T& b) const {
+        return has_vertex(a) && has_vertex(b) &&
+            index_of(b, neighbours_of(a)) != -1;
+    }
+    vector<T> neighbours_of(const T& v) const {
+        return lists[index_of_vertex(v)];
+    }
+
+    // I changed 'visited' to be a set. This doesn't change the algorithm a lot
+    bool has_path(const T& a, const T& b) const {
+        set<T> visited;
+        return has_path(a, b, visited);
+    }
+    bool has_path(const T& a, const T& b, set<T>& visited) const {
+        if (a == b) {
+            return true;
+        }
+        visited.insert(a);
+        vector<T> neighbours = neighbours_of(a);
+        for (int i = 0; i < neighbours.size(); i++) {
+            if (visited.count(neighbours[i]) == 0 && has_path(neighbours[i], b))
+                return true;
+        }
+        return false;
+    }
+
+    void print_bfs(const T& start) const {
+        set<T> visited;
+        visited.insert(start);
+
+        queue<T> q;
+        q.push(start);
+
+        while (!q.empty()) {
+            T crr = q.front();
+            q.pop();
+            cout << crr << ' ';
+
+            vector<T> neighbours = neighbours_of(crr);
+            
+            for (unsigned i = 0; i < neighbours.size(); i++) {
+                if (!visited.count(neighbours[i]) == 1) {         // if neighbours[i] is visited
+                    q.push(neighbours[i]);
+                    visited.insert(neighbours[i]);                // I had to move the insertion here,
+                }                                                 // we'll see why today (18.01.2018)
+            }
+        }
+    }
+    
+    void print_dfs(const T& start) {
+        set<T> visited;
+        visited.insert(start);
+        print_dfs(start, visited);
+    }
+    void print_dfs(const T& start, set<T>& visited) {
+        cout << start << ' ';
+        vector<T> neighbours = neighbours_of(start);
+
+        for (unsigned i = 0; i < neighbours.size(); i++) {
+            if (!visited.count(neighbours[i]) == 1) {            // if neighbours[i] is visited
+                visited.insert(neighbours[i]);
+                print_dfs(neighbours[i], visited);
+            }
+        }
+    }
 };
 
-// Just for the protocol, putting the test function here is not the best practice.
-// But we already do bad things, like keeping the methods' definitions inside the class and testing with 'cout'...
+#include"util.h"            // expect()
+#include"string"
+using std::string;
+
 void test_graph() {
-    Graph<int> g2({ 1, 2, 3,  4, 6, 7,  8, 9, 15 });
+    Graph<string> g({ "Montana", "Lovech",  "Ruse"              // Everything is connected
+                      "Sofia",   "Tarnovo", "Varna",            // to what is just under it
+                      "Dupnica", "Plovdiv", "Burgas" });        // or just right to it
 
-    g2.add_edge(1, 2);
-    g2.add_edge(1, 3);
-    g2.add_edge(1, 6);
-    g2.add_edge(1, 7);
+    g.add_edge("Montana", "Sofia");      g.add_edge("Lovech", "Tarnovo");       
+    g.add_edge("Montana", "Lovech");     g.add_edge("Lovech", "Ruse");         g.add_edge("Ruse", "Varna");
 
-    g2.add_edge(2, 3);
-    g2.add_edge(2, 8);
-    g2.add_edge(2, 9);
+    g.add_edge("Sofia", "Dupnica");      g.add_edge("Tarnovo", "Plovdiv");
+    g.add_edge("Sofia", "Tarnovo");      g.add_edge("Tarnovo", "Varna");       g.add_edge("Varna", "Burgas");
+         
+    g.add_edge("Dupnica", "Plovdiv");    g.add_edge("Plovdiv", "Burgas");
 
-    g2.add_edge(3, 6);
-    g2.add_edge(4, 4);
-    g2.add_edge(7, 2);
-    g2.add_edge(7, 15);
 
-    cout << "Before filter:\n";
-    g2.print();
-    cout << '\n';
+    cout << "has_path:\n\n"
+         << g.has_path("Lovech", "Plovdiv")
+         << g.has_path("Montana", "Burgas")
+         << g.has_path("Sofia", "Ruse");
+    expect("110");
 
-    g2.filter([](const int& x) { return x % 2 == 1; });
-    cout << "After filter:\n";
-    g2.print();
+    cout << "BFS:\n\n";
+    g.print_bfs("Montana");
+    expect("Montana Sofia Lovech Dupnica Tarnovo Ruse Plovdiv Varna Burgas");
+
+    cout << "DFS:\n\n";
+    g.print_dfs("Montana");
+    expect("Montana Sofia Dupnica Plovdiv Burgas Tarnovo Varna Lovech Ruse");
 }
