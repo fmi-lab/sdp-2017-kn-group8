@@ -13,7 +13,7 @@ struct Node {
     Node(const T& _data) : data(_data), children() {}
 };
 
-// 'Multinary' tree - each Node can have any number of children
+// Multinary tree - each Node can have any number of children
 
 template<typename T>
 class MTree {
@@ -29,7 +29,7 @@ public:
 
     // 'position' is the position of x's parent.
     // If the tree is empty, what is added is the root, then 'position' doesn't matter
-    void add(const T& x, vector<int> position) {
+    void add(const T& x, vector<int> position = {}) {
         if (root == nullptr) {
             root = new Node<T>(x);
             return;
